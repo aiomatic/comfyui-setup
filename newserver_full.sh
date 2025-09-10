@@ -31,29 +31,26 @@ echo "[INFO] Downloading models, text encoders, VAEs, and checkpoints..."
 
 # Text Encoder
 wget -nc -O ~/ComfyUI/models/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors \
-  https://huggingface.co/google/umt5-xxl/resolve/main/umt5_xxl_fp8_e4m3fn_scaled.safetensors
+  https://huggingface.co/chatpig/encoder/resolve/main/umt5_xxl_fp8_e4m3fn_scaled.safetensors
 
 # VAEs
 wget -nc -O ~/ComfyUI/models/vae/wan_2.1_vae.safetensors \
-  https://huggingface.co/city96/wan-vae/resolve/main/wan_2.1_vae.safetensors
+  https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors
 
 wget -nc -O ~/ComfyUI/models/vae/wan2.2_vae.safetensors \
-  https://huggingface.co/city96/wan-vae/resolve/main/wan2.2_vae.safetensors
-
+  https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan2.2_vae.safetensors
 # Diffusion Models
 wget -nc -O ~/ComfyUI/models/diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors \
-  https://huggingface.co/QuantStack/Wan2.2-I2V-A14B/resolve/main/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors
+  https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors
 
 wget -nc -O ~/ComfyUI/models/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors \
-  https://huggingface.co/QuantStack/Wan2.2-I2V-A14B/resolve/main/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors
+  https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors
 
 wget -nc -O ~/ComfyUI/models/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors \
-  https://huggingface.co/QuantStack/Wan2.2-TI2V-5B/resolve/main/wan2.2_ti2v_5B_fp16.safetensors
-
+  https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors
 # Rapid AIO checkpoint
 wget -nc -O ~/ComfyUI/models/checkpoints/wan2.2-i2v-rapid-aio-v10.safetensors \
   https://huggingface.co/Phr00t/WAN2.2-14B-Rapid-AllInOne/resolve/main/v10/wan2.2-i2v-rapid-aio-v10.safetensors
-
 # === Install ComfyUI ===
 echo "[INFO] Installing ComfyUI Easy Installer..."
 if [ ! -d ~/ComfyUI-Easy-Install ]; then
