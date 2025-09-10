@@ -23,49 +23,11 @@ apt-get install -y git wget curl unzip
 su - "$USERNAME" -c bash <<'EOSU'
 set -euo pipefail
 
-# === ComfyUI Easy Installer ===
-if [ ! -d ~/ComfyUI-Easy-Install ]; then
-  git clone https://github.com/VenimK/ComfyUI-Easy-Install.git ~/ComfyUI-Easy-Install
-fi
-cd ~/ComfyUI-Easy-Install
-chmod +x ComfyUI-Easy-Install.sh
-./ComfyUI-Easy-Install.sh || true   # avoid breaking on "press any key"
-
-# === Custom Nodes ===
-mkdir -p ~/ComfyUI/custom_nodes
-cd ~/ComfyUI/custom_nodes
-
-declare -A NODES=(
-  [ComfyUI-Manager]="https://github.com/ltdrdata/ComfyUI-Manager.git"
-  [ComfyUI_LayerStyle]="https://github.com/chflame163/ComfyUI_LayerStyle.git"
-  [ComfyUI-essentials]="https://github.com/city96/ComfyUI-essentials.git"
-  [ComfyUI-AnyWhere]="https://github.com/shiimizu/ComfyUI-AnyWhere.git"
-  [comfyui-layerutility]="https://github.com/mrbadass/comfyui-layerutility.git"
-  [GetNode]="https://github.com/Suzie1/GetNode.git"
-  [SetNode]="https://github.com/Suzie1/SetNode.git"
-  [LoaderGGUF]="https://github.com/city96/ComfyUI-LoaderGGUF.git"
-  [wanBlockSwap]="https://github.com/city96/ComfyUI-wanBlockSwap.git"
-  [rgthree-comfyui-tools]="https://github.com/rgthree/rgthree-comfyui-tools.git"
-  [pysssss-comfyui-extras]="https://github.com/pysssss/ComfyUI-Custom-Scripts.git"
-  [VideoHelperSuite]="https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git"
-  [PatchSageAttentionKJ]="https://github.com/kijai/ComfyUI-PatchSageAttention.git"
-  [ComfyUI-Custom-Nodes]="https://github.com/Kosinkadink/ComfyUI-Custom-Nodes.git"
-)
-
-for NODE in "${!NODES[@]}"; do
-  if [ ! -d "$HOME/ComfyUI/custom_nodes/$NODE" ]; then
-    echo "[INFO] Installing node: $NODE"
-    git clone "${NODES[$NODE]}" "$HOME/ComfyUI/custom_nodes/$NODE" || true
-  else
-    echo "[OK] Node already present: $NODE"
-  fi
-done
-
 # === Model folders ===
 mkdir -p ~/ComfyUI/models/{checkpoints,vae,loras,gguf,text_encoders,diffusion_models}
 
 # --- Download Models ---
-echo "[INFO] Downloading WAN models & encoders..."
+echo "[INFO] Downloading models, text encoders, VAEs, and checkpoints..."
 
 # Text Encoder
 wget -nc -O ~/ComfyUI/models/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors \
@@ -91,6 +53,49 @@ wget -nc -O ~/ComfyUI/models/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors \
 # Rapid AIO checkpoint
 wget -nc -O ~/ComfyUI/models/checkpoints/wan2.2-i2v-rapid-aio-v10.safetensors \
   https://huggingface.co/Phr00t/WAN2.2-14B-Rapid-AllInOne/resolve/main/v10/wan2.2-i2v-rapid-aio-v10.safetensors
+
+# === Install ComfyUI ===
+echo "[INFO] Installing ComfyUI Easy Installer..."
+if [ ! -d ~/ComfyUI-Easy-Install ]; then
+  git clone https://github.com/VenimK/ComfyUI-Easy-Install.git ~/ComfyUI-Easy-Install
+fi
+cd ~/ComfyUI-Easy-Install
+chmod +x ComfyUI-Easy-Install.sh
+./ComfyUI-Easy-Install.sh || true   # skip "press any key" error
+
+# === Sage Attention ===
+echo "[INFO] Installing Sage Attention..."
+mkdir -p ~/ComfyUI/custom_nodes
+cd ~/ComfyUI/custom_nodes
+if [ ! -d "PatchSageAttentionKJ" ]; then
+  git clone https://github.com/kijai/ComfyUI-PatchSageAttention.git PatchSageAttentionKJ
+fi
+
+# === Custom Nodes ===
+declare -A NODES=(
+  [ComfyUI-Manager]="https://github.com/ltdrdata/ComfyUI-Manager.git"
+  [ComfyUI_LayerStyle]="https://github.com/chflame163/ComfyUI_LayerStyle.git"
+  [ComfyUI-essentials]="https://github.com/city96/ComfyUI-essentials.git"
+  [ComfyUI-AnyWhere]="https://github.com/shiimizu/ComfyUI-AnyWhere.git"
+  [comfyui-layerutility]="https://github.com/mrbadass/comfyui-layerutility.git"
+  [GetNode]="https://github.com/Suzie1/GetNode.git"
+  [SetNode]="https://github.com/Suzie1/SetNode.git"
+  [LoaderGGUF]="https://github.com/city96/ComfyUI-LoaderGGUF.git"
+  [wanBlockSwap]="https://github.com/city96/ComfyUI-wanBlockSwap.git"
+  [rgthree-comfyui-tools]="https://github.com/rgthree/rgthree-comfyui-tools.git"
+  [pysssss-comfyui-extras]="https://github.com/pysssss/ComfyUI-Custom-Scripts.git"
+  [VideoHelperSuite]="https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git"
+  [ComfyUI-Custom-Nodes]="https://github.com/Kosinkadink/ComfyUI-Custom-Nodes.git"
+)
+
+for NODE in "${!NODES[@]}"; do
+  if [ ! -d "$HOME/ComfyUI/custom_nodes/$NODE" ]; then
+    echo "[INFO] Installing node: $NODE"
+    git clone "${NODES[$NODE]}" "$HOME/ComfyUI/custom_nodes/$NODE" || true
+  else
+    echo "[OK] Node already present: $NODE"
+  fi
+done
 
 # === Final Verification ===
 echo "[INFO] Verifying installation..."
