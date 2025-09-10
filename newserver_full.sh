@@ -24,14 +24,21 @@ su - "$USERNAME" -c bash <<'EOSU'
 set -euo pipefail
 
 # === Model folders ===
-mkdir -p ~/ComfyUI/models/{checkpoints,vae,loras,gguf,text_encoders,diffusion_models}
+mkdir -p ~/ComfyUI/models/{checkpoints,vae,loras,unet,text_encoders,diffusion_models}
 
 # --- Download Models ---
-echo "[INFO] Downloading models, text encoders, VAEs, and checkpoints..."
+echo "[INFO] Downloading models, text encoders, VAEs, checkpoints, and LoRAs..."
 
-# Text Encoder
+# Text Encoders
 wget -nc -O ~/ComfyUI/models/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors \
   https://huggingface.co/chatpig/encoder/resolve/main/umt5_xxl_fp8_e4m3fn_scaled.safetensors
+
+wget -nc -O ~/ComfyUI/models/text_encoders/clip_vision_vit_h.safetensors \
+  https://huggingface.co/lllyasviel/misc/resolve/main/clip_vision_vit_h.safetensors
+
+# LoRAs
+wget -nc -O ~/ComfyUI/models/loras/lightx2v_T2V_14B_cfg_step_distill_v2_lora_rank256_bf16.safetensors \
+  https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_T2V_14B_cfg_step_distill_v2_lora_rank256_bf16.safetensors
 
 # VAEs
 wget -nc -O ~/ComfyUI/models/vae/wan_2.1_vae.safetensors \
@@ -39,6 +46,7 @@ wget -nc -O ~/ComfyUI/models/vae/wan_2.1_vae.safetensors \
 
 wget -nc -O ~/ComfyUI/models/vae/wan2.2_vae.safetensors \
   https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan2.2_vae.safetensors
+
 # Diffusion Models
 wget -nc -O ~/ComfyUI/models/diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors \
   https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors
@@ -48,9 +56,18 @@ wget -nc -O ~/ComfyUI/models/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scale
 
 wget -nc -O ~/ComfyUI/models/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors \
   https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors
-# Rapid AIO checkpoint
+
+# Checkpoints
 wget -nc -O ~/ComfyUI/models/checkpoints/wan2.2-i2v-rapid-aio-v10.safetensors \
   https://huggingface.co/Phr00t/WAN2.2-14B-Rapid-AllInOne/resolve/main/v10/wan2.2-i2v-rapid-aio-v10.safetensors
+
+# Unet GGUF
+wget -nc -O ~/ComfyUI/models/unet/Wan2.2-T2V-A14B-LowNoise-Q4_K_S.gguf \
+  https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q4_K_S.gguf?download=true
+
+wget -nc -O ~/ComfyUI/models/unet/Wan2.2-T2V-A14B-HighNoise-Q4_K_S.gguf \
+  https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-T2V-A14B-HighNoise-Q4_K_S.gguf
+
 # === Install ComfyUI ===
 echo "[INFO] Installing ComfyUI Easy Installer..."
 if [ ! -d ~/ComfyUI-Easy-Install ]; then
@@ -102,12 +119,16 @@ MISSING=0
 # Check models
 for FILE in \
   "$HOME/ComfyUI/models/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" \
+  "$HOME/ComfyUI/models/text_encoders/clip_vision_vit_h.safetensors" \
+  "$HOME/ComfyUI/models/loras/lightx2v_T2V_14B_cfg_step_distill_v2_lora_rank256_bf16.safetensors" \
   "$HOME/ComfyUI/models/vae/wan_2.1_vae.safetensors" \
   "$HOME/ComfyUI/models/vae/wan2.2_vae.safetensors" \
   "$HOME/ComfyUI/models/diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors" \
   "$HOME/ComfyUI/models/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors" \
   "$HOME/ComfyUI/models/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors" \
-  "$HOME/ComfyUI/models/checkpoints/wan2.2-i2v-rapid-aio-v10.safetensors"; do
+  "$HOME/ComfyUI/models/checkpoints/wan2.2-i2v-rapid-aio-v10.safetensors" \
+  "$HOME/ComfyUI/models/unet/Wan2.2-T2V-A14B-LowNoise-Q4_K_S.gguf" \
+  "$HOME/ComfyUI/models/unet/Wan2.2-T2V-A14B-HighNoise-Q4_K_S.gguf"; do
   if [ ! -f "$FILE" ]; then
     echo "[MISSING] $FILE"
     MISSING=1
