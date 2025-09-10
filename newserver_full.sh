@@ -29,35 +29,37 @@ if [ ! -d ~/ComfyUI-Easy-Install ]; then
 fi
 cd ~/ComfyUI-Easy-Install
 chmod +x ComfyUI-Easy-Install.sh
-./ComfyUI-Easy-Install.sh
+./ComfyUI-Easy-Install.sh || true   # don't stop if installer exits with "press any key"
 
 # === Custom Nodes ===
+mkdir -p ~/ComfyUI/custom_nodes
 cd ~/ComfyUI/custom_nodes
-git clone https://github.com/ltdrdata/ComfyUI-Manager.git
-git clone https://github.com/chflame163/ComfyUI_LayerStyle.git
-git clone https://github.com/city96/ComfyUI-essentials.git
-git clone https://github.com/shiimizu/ComfyUI-AnyWhere.git
-git clone https://github.com/mrbadass/comfyui-layerutility.git
-git clone https://github.com/Suzie1/GetNode.git
-git clone https://github.com/Suzie1/SetNode.git
-git clone https://github.com/city96/ComfyUI-LoaderGGUF.git
+
+git clone https://github.com/ltdrdata/ComfyUI-Manager.git || true
+git clone https://github.com/chflame163/ComfyUI_LayerStyle.git || true
+git clone https://github.com/city96/ComfyUI-essentials.git || true
+git clone https://github.com/shiimizu/ComfyUI-AnyWhere.git || true
+git clone https://github.com/mrbadass/comfyui-layerutility.git || true
+git clone https://github.com/Suzie1/GetNode.git || true
+git clone https://github.com/Suzie1/SetNode.git || true
+git clone https://github.com/city96/ComfyUI-LoaderGGUF.git || true
 
 # === Model folders ===
 mkdir -p ~/ComfyUI/models/{checkpoints,vae,loras,gguf,text_encoders}
 
 # --- Download WAN2.2 models ---
 echo "[INFO] Downloading WAN2.2 models..."
-wget -O ~/ComfyUI/models/gguf/Wan2.2-LowNoise-Q4_K_S.gguf \
+wget -nc -O ~/ComfyUI/models/gguf/Wan2.2-LowNoise-Q4_K_S.gguf \
   https://huggingface.co/QuantStack/Wan2.2-I2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-I2V-A14B-LowNoise-Q4_K_S.gguf
 
-wget -O ~/ComfyUI/models/gguf/Wan2.2-HighNoise-Q4_K_S.gguf \
+wget -nc -O ~/ComfyUI/models/gguf/Wan2.2-HighNoise-Q4_K_S.gguf \
   https://huggingface.co/QuantStack/Wan2.2-I2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-I2V-A14B-HighNoise-Q4_K_S.gguf
 
-wget -O ~/ComfyUI/models/vae/wan_2.1_vae.safetensors \
+wget -nc -O ~/ComfyUI/models/vae/wan_2.1_vae.safetensors \
   https://huggingface.co/city96/wan-vae/resolve/main/wan_2.1_vae.safetensors
 
 # --- Rapid AIO model ---
-wget -O ~/ComfyUI/models/checkpoints/wan2.2-i2v-rapid-aio-v10.safetensors \
+wget -nc -O ~/ComfyUI/models/checkpoints/wan2.2-i2v-rapid-aio-v10.safetensors \
   https://huggingface.co/Phr00t/WAN2.2-14B-Rapid-AllInOne/resolve/main/v10/wan2.2-i2v-rapid-aio-v10.safetensors
 
 EOSU
