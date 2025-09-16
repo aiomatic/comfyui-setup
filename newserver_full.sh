@@ -8,8 +8,8 @@ BASE_DIR="/workspace/ComfyUI"
 MODELS_DIR="$BASE_DIR/models"
 NODES_DIR="$BASE_DIR/custom_nodes"
 
-# --- Hugging Face Token (replace with yours) ---
-HF_TOKEN="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"
+# --- Hugging Face Token ---
+export HF_TOKEN="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"
 
 # --- Ensure folders exist ---
 mkdir -p $MODELS_DIR/{checkpoints,vae,loras,gguf,upscale_models,clip_vision}
@@ -20,15 +20,13 @@ mkdir -p $NODES_DIR
 # =============================
 
 echo "[INFO] Downloading WAN 2.2 Rapid AIO..."
-curl -L -o $MODELS_DIR/checkpoints/wan2.2-i2v-rapid-aio-v10.safetensors \
+curl -L -H "Authorization: Bearer $HF_TOKEN" \
+-o $MODELS_DIR/checkpoints/wan2.2-i2v-rapid-aio-v10.safetensors \
 https://huggingface.co/Phr00t/WAN2.2-14B-Rapid-AllInOne/resolve/main/v10/wan2.2-i2v-rapid-aio-v10.safetensors
 
-echo "[INFO] Downloading WAN VAEs..."
-curl -L -o $MODELS_DIR/vae/wan_2.1_vae.safetensors \
-https://huggingface.co/city96/wan-vae/resolve/main/wan_2.1_vae.safetensors?download=true
-
-curl -L -o $MODELS_DIR/vae/wan2.2_vae.safetensors \
-https://huggingface.co/city96/wan-vae/resolve/main/wan2.2_vae.safetensors?download=true
+echo "[INFO] Downloading Stable Diffusion 1.5..."
+curl -L -o $MODELS_DIR/checkpoints/v1-5-pruned-emaonly-fp16.safetensors \
+https://huggingface.co/Comfy-Org/stable-diffusion-v1-5-archive/resolve/main/v1-5-pruned-emaonly-fp16.safetensors
 
 echo "[INFO] Downloading LightX2V LoRA..."
 curl -L -H "Authorization: Bearer $HF_TOKEN" \
@@ -45,6 +43,21 @@ https://huggingface.co/camenduru/Magic-Me/resolve/main/models/upscale_models/4xU
 echo "[INFO] Downloading CLIP Vision ViT-H..."
 curl -L -o $MODELS_DIR/clip_vision/clip_vision_vit_h.safetensors \
 https://huggingface.co/lllyasviel/misc/resolve/main/clip_vision_vit_h.safetensors?download=true
+
+echo "[INFO] Downloading FLUX.1-dev GGUF (Unet)..."
+curl -L -H "Authorization: Bearer $HF_TOKEN" \
+-o $MODELS_DIR/diffusion_models/flux1-dev-Q2_K.gguf \
+https://huggingface.co/city96/FLUX.1-dev-gguf/resolve/main/flux1-dev-Q2_K.gguf
+
+echo "[INFO] Downloading FLUX.1-dev VAE..."
+curl -L -H "Authorization: Bearer $HF_TOKEN" \
+-o $MODELS_DIR/vae/flux1-dev-vae.safetensors \
+https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/vae/diffusion_pytorch_model.safetensors
+
+echo "[INFO] Downloading FLUX.1-schnell VAE..."
+curl -L -H "Authorization: Bearer $HF_TOKEN" \
+-o $MODELS_DIR/vae/flux1-schnell-vae.safetensors \
+https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/vae/diffusion_pytorch_model.safetensors
 
 # =============================
 # CUSTOM NODES
@@ -73,4 +86,3 @@ du -sh $MODELS_DIR/* 2>/dev/null || true
 ls -lh $NODES_DIR | head -30
 
 echo "[DONE] ComfyUI setup finished successfully!"
-
