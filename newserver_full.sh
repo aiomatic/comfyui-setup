@@ -9,7 +9,7 @@ MODELS_DIR="$BASE_DIR/models"
 NODES_DIR="$BASE_DIR/custom_nodes"
 
 # --- Hugging Face Token ---
-export HF_TOKEN="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"
+export HF_TOKEN=""
 
 # --- Ensure folders exist ---
 mkdir -p $MODELS_DIR/{checkpoints,vae,loras,gguf,upscale_models,clip_vision}
@@ -43,16 +43,6 @@ https://huggingface.co/camenduru/Magic-Me/resolve/main/models/upscale_models/4xU
 echo "[INFO] Downloading CLIP Vision ViT-H..."
 curl -L -o $MODELS_DIR/clip_vision/clip_vision_vit_h.safetensors \
 https://huggingface.co/lllyasviel/misc/resolve/main/clip_vision_vit_h.safetensors?download=true
-
-echo "[INFO] Downloading FLUX.1-dev GGUF (Unet)..."
-curl -L -H "Authorization: Bearer $HF_TOKEN" \
--o $MODELS_DIR/diffusion_models/flux1-dev-Q2_K.gguf \
-https://huggingface.co/city96/FLUX.1-dev-gguf/resolve/main/flux1-dev-Q2_K.gguf
-
-echo "[INFO] Downloading FLUX.1-dev VAE..."
-curl -L -H "Authorization: Bearer $HF_TOKEN" \
--o $MODELS_DIR/vae/flux1-dev-vae.safetensors \
-https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/vae/diffusion_pytorch_model.safetensors
 
 echo "[INFO] Downloading FLUX.1-schnell VAE..."
 curl -L -H "Authorization: Bearer $HF_TOKEN" \
